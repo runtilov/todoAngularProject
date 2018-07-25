@@ -1,0 +1,71 @@
+<form [formGroup]="contactForm" (submit)="onSubmit()">
+
+  <div class="form-group">
+    <label for="name">Your name</label>
+    <input
+      formControlName="name"
+      type="text"
+      class="form-control"
+      [ngClass]="{ 'is-invalid': submitted && fields.name.errors }"
+      id="name"
+      autocomplete='name'
+      aria-describedby="nameHelp"
+      placeholder="Enter name"
+    >
+    <div *ngIf="submitted && fields.name.errors" class="invalid-feedback">
+      <div *ngIf="fields.name.errors.required">Name is required</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email address</label>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      autocomplete='email'
+      aria-describedby="emailHelp"
+      placeholder="Enter email"
+      formControlName="email"
+      [ngClass]="{ 'is-invalid': submitted && fields.email.errors }"
+    >
+    <div *ngIf="submitted && fields.email.errors" class="invalid-feedback">
+      <div *ngIf="fields.email.errors.required">Email is required</div>
+      <div *ngIf="fields.email.errors.email">Email must be a valid email address</div>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <label for="site">Your site</label>
+    <input
+      type="text"
+      class="form-control"
+      id="site"
+      aria-describedby="siteHelp"
+      placeholder="Enter your site"
+      formControlName="site"
+      [ngClass]="{ 'is-invalid': submitted && fields.site.errors }">
+    <div *ngIf="submitted && fields.site.errors" class="invalid-feedback">
+      <div *ngIf="fields.site.errors.validUrl">Url is not valid</div>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <label for="message">What's on your mind ? </label>
+    <textarea
+      class="form-control"
+      id="message"
+      rows="5"
+      formControlName="message"
+      [ngClass]="{ 'is-invalid': submitted && fields.message.errors }">
+    </textarea>
+    <div *ngIf="submitted && fields.message.errors" class="invalid-feedback">
+      <div *ngIf="fields.message.errors.required">Message is required</div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
