@@ -33,7 +33,7 @@ export class TodoPageComponent implements OnInit {
   }
 
   get tasks(): Array<Task> {
-    return [...this.unfinishedTasks, ...this.finishedTasks].reverse();
+    return [...this.finishedTasks, ...this.unfinishedTasks].reverse();
   }
 
   addTask(): void {

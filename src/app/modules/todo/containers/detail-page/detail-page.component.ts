@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TasksService} from '../../tasks.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Task} from '../../models/task';
 
 @Component({
@@ -12,7 +12,7 @@ export class DetailPageComponent implements OnInit {
 
   task: Task;
 
-  constructor(private taskService: TasksService, private route: ActivatedRoute) {
+  constructor(private taskService: TasksService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
@@ -23,6 +23,11 @@ export class DetailPageComponent implements OnInit {
 
   finishTask() {
     this.taskService.finishTask(this.task.id);
+  }
+
+  removeTask() {
+    this.taskService.removeTask(this.task.id);
+    this.router.navigateByUrl('todo');
   }
 
 }
