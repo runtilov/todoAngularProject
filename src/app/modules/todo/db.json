@@ -1,18 +1,4 @@
 {
-  "tasks": [
-    {
-      "id": "12",
-      "name": "Hi",
-      "description": "This is the firs task",
-      "finished": true,
-      "finishedAt": "1312321"
-    },
-    {
-      "id": "123",
-      "name": "Hey",
-      "description": "This is the second task",
-      "finished": false,
-      "finishedAt": null
-    }
-  ]
+  "unfinishedTasks": [],
+  "finishedTasks": []
 }

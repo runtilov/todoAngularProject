@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Task } from '../../models/task';
-import {TasksService} from '../../tasks.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ApiTasksService} from '../../services/api-storage/api-tasks.service';
 
 @Component({
   selector: 'app-todo-page',
@@ -10,13 +10,13 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class TodoPageComponent implements OnInit {
 
-  finishedTasks: Array<Task>;
-  unfinishedTasks: Array<Task>;
+  finishedTasks: Array<Task> = [];
+  unfinishedTasks: Array<Task> = [];
   taskForm: FormGroup;
   submitted: boolean;
 
   constructor(
-    private taskService: TasksService, private formBuilder: FormBuilder
+    private taskService: ApiTasksService, private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -24,8 +24,12 @@ export class TodoPageComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
-    this.finishedTasks = this.taskService.getFinishedTasks();
-    this.unfinishedTasks = this.taskService.getUnfinishedTasks();
+    this.taskService.getFinishedTasks().subscribe( tasks => {
+      this.finishedTasks = tasks;
+    });
+    this.taskService.getUnfinishedTasks().subscribe( tasks => {
+      this.unfinishedTasks = tasks;
+    });
   }
 
   get fields() {
@@ -41,6 +45,7 @@ export class TodoPageComponent implements OnInit {
     if (this.taskForm.invalid) {
       return;
     }
-    this.taskService.addTask(this.taskForm.value.name, this.taskForm.value.description);
+    const task = this.taskService.addTask(this.taskForm.value.name, this.taskForm.value.description);
+    this.unfinishedTasks.push(task);
   }
 }

@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DetailPageComponent } from './containers/detail-page/detail-page.component';
 import {todoRoutes} from './todo.routes';
 import {RouterModule} from '@angular/router';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import {RouterModule} from '@angular/router';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    todoRoutes
+    HttpClientModule,
+    todoRoutes,
   ],
   exports: [TodoPageComponent],
   declarations: [TodoPageComponent, DetailPageComponent]

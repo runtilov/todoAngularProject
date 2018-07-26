@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {TasksService} from '../../tasks.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Task} from '../../models/task';
+import {ApiTasksService} from '../../services/api-storage/api-tasks.service';
 
 @Component({
   selector: 'app-detail-page',
@@ -12,22 +12,23 @@ export class DetailPageComponent implements OnInit {
 
   task: Task;
 
-  constructor(private taskService: TasksService, private route: ActivatedRoute, private router: Router) {
+  constructor(private taskService: ApiTasksService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
-      this.task = this.taskService.getTask(params.id);
+      this.taskService.getTask(params.id).subscribe( task => {
+        this.task = task;
+      });
     });
   }
 
   finishTask() {
-    this.taskService.finishTask(this.task.id);
+    this.taskService.finishTask(this.task.id).subscribe(task => { this.task = task; });
   }
 
   removeTask() {
-    this.taskService.removeTask(this.task.id);
-    this.router.navigateByUrl('todo');
+    this.taskService.removeTask(this.task.id).subscribe(() => { this.router.navigateByUrl('todo'); });
   }
 
 }
