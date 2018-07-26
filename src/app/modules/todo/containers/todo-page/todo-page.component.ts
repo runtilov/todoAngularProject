@@ -10,9 +10,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class TodoPageComponent implements OnInit {
 
-  tasks: Array<Task> = [];
+  finishedTasks: Array<Task>;
+  unfinishedTasks: Array<Task>;
   taskForm: FormGroup;
-  submited: boolean;
+  submitted: boolean;
 
   constructor(
     private taskService: TasksService, private formBuilder: FormBuilder
@@ -23,15 +24,20 @@ export class TodoPageComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
-    this.tasks = this.taskService.getTasks();
+    this.finishedTasks = this.taskService.getFinishedTasks();
+    this.unfinishedTasks = this.taskService.getUnfinishedTasks();
   }
 
   get fields() {
     return this.taskForm.controls;
   }
 
-  addTask() {
-    this.submited = true;
+  get tasks(): Array<Task> {
+    return [...this.unfinishedTasks, ...this.finishedTasks].reverse();
+  }
+
+  addTask(): void {
+    this.submitted = true;
     if (this.taskForm.invalid) {
       return;
     }

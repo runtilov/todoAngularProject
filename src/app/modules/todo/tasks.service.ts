@@ -21,17 +21,25 @@ export class TasksService {
     }
   }
 
-  getTasks() {
+  getTasks(): Array<Task> {
     return [...this.unfinishedTasks, ...this.finishedTasks];
   }
 
-  getTask(taskId) {
-    return this.getTasks().find((task) => task.id === taskId);
+  getFinishedTasks(): Array<Task> {
+    return this.finishedTasks;
   }
 
-  addTask(taskName, taskDescription) {
+  getUnfinishedTasks(): Array<Task> {
+    return this.unfinishedTasks;
+  }
+
+  getTask(taskId: string): Task {
+    return (this.getTasks().find((task) => task.id === taskId) as Task);
+  }
+
+  addTask(taskName: string, taskDescription: string): void {
     const task: Task = {
-      id: `${taskName}_${Date.now()}`,
+      id: `${Date.now()}_${taskName}`,
       name: taskName,
       description: taskDescription,
       finished: false,
@@ -41,7 +49,7 @@ export class TasksService {
     localStorage.setItem('unfinishedTasks', JSON.stringify(this.unfinishedTasks));
   }
 
-  finishTask(taskId) {
+  finishTask(taskId: string): void {
     const index = this.unfinishedTasks.findIndex((task_it) => task_it.id === taskId);
     if (index === -1) {
       return;
@@ -55,7 +63,7 @@ export class TasksService {
     localStorage.setItem('finishedTasks', JSON.stringify(this.finishedTasks));
   }
 
-  removeTask(taskId) {
+  removeTask(taskId: string) {
     const index = this.finishedTasks.findIndex((task) => task.id === taskId);
     if (index === -1) {
       return;
