@@ -1,22 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Task } from '../../models/task';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ApiTasksService} from '../../services/api-storage/api-tasks.service';
+import {Subscription} from 'rxjs';
+import {LocalStorageTasksService} from '../../services/local-storage/local-storage-tasks.service';
 
 @Component({
   selector: 'app-todo-page',
   templateUrl: './todo-page.component.html',
   styleUrls: ['./todo-page.component.css']
 })
-export class TodoPageComponent implements OnInit {
+export class TodoPageComponent implements OnInit, OnDestroy {
 
   finishedTasks: Array<Task> = [];
   unfinishedTasks: Array<Task> = [];
   taskForm: FormGroup;
   submitted: boolean;
+  subscriptions: Array<Subscription> = [];
 
   constructor(
-    private taskService: ApiTasksService, private formBuilder: FormBuilder
+    private taskService: LocalStorageTasksService, private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -24,11 +27,17 @@ export class TodoPageComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
-    this.taskService.getFinishedTasks().subscribe( tasks => {
+     this.subscriptions.push(this.taskService.getFinishedTasks().subscribe( tasks => {
       this.finishedTasks = tasks;
-    });
-    this.taskService.getUnfinishedTasks().subscribe( tasks => {
+    }));
+    this.subscriptions.push(this.taskService.getUnfinishedTasks().subscribe( tasks => {
       this.unfinishedTasks = tasks;
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
     });
   }
 
@@ -45,7 +54,10 @@ export class TodoPageComponent implements OnInit {
     if (this.taskForm.invalid) {
       return;
     }
-    const task = this.taskService.addTask(this.taskForm.value.name, this.taskForm.value.description);
-    this.unfinishedTasks.push(task);
+    this.subscriptions.push(
+      this.taskService.addTask(this.taskForm.value.name, this.taskForm.value.description).subscribe(task => {
+        this.unfinishedTasks.push(task);
+      })
+    );
   }
 }

@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Task} from '../../models/task';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,23 +21,37 @@ export class LocalStorageTasksService {
     }
   }
 
-  getTasks(): Array<Task> {
-    return [...this.unfinishedTasks, ...this.finishedTasks];
+  getFinishedTasks(): Observable<Array<Task>> {
+    return new Observable<Array<Task>>((observer) => {
+      observer.next([...this.finishedTasks]);
+      observer.complete();
+      return {
+        unsubscribe() {}
+      };
+    });
+  }
+  getUnfinishedTasks(): Observable<Array<Task>> {
+    return new Observable<Array<Task>>((observer) => {
+      observer.next([...this.unfinishedTasks]);
+      observer.complete();
+      return {
+        unsubscribe() {}
+      };
+    });
   }
 
-  getFinishedTasks(): Array<Task> {
-    return this.finishedTasks;
+  getTask(taskId: string): Observable<Task> {
+    return new Observable<Task>((observer) => {
+      observer.next([...this.finishedTasks, ...this.unfinishedTasks].find((task) => task.id === taskId) as Task);
+      observer.complete();
+      return {
+        unsubscribe() {}
+      };
+    });
   }
 
-  getUnfinishedTasks(): Array<Task> {
-    return this.unfinishedTasks;
-  }
-
-  getTask(taskId: string): Task {
-    return (this.getTasks().find((task) => task.id === taskId) as Task);
-  }
-
-  addTask(taskName: string, taskDescription: string): void {
+  addTask(taskName: string, taskDescription: string): Observable<Task> {
+    return new Observable<Task>((observer) => {
     const task: Task = {
       id: `${Date.now()}_${taskName}`,
       name: taskName,
@@ -46,28 +61,48 @@ export class LocalStorageTasksService {
     };
     this.unfinishedTasks.push(task);
     localStorage.setItem('unfinishedTasks', JSON.stringify(this.unfinishedTasks));
+    observer.next(task);
+    observer.complete();
+    return {
+      unsubscribe() {}
+    };
+  });
   }
 
-  finishTask(taskId: string): void {
-    const index = this.unfinishedTasks.findIndex((task_it) => task_it.id === taskId);
-    if (index === -1) {
-      return;
-    }
-    const task = this.unfinishedTasks[index];
-    this.unfinishedTasks.splice(index, 1);
-    localStorage.setItem('unfinishedTasks', JSON.stringify(this.unfinishedTasks));
-    task.finished = true;
-    task.finishedAt = `${Date.now()}`;
-    this.finishedTasks.push(task);
-    localStorage.setItem('finishedTasks', JSON.stringify(this.finishedTasks));
+  finishTask(taskId: string): Observable<Task> {
+    return new Observable<Task>((observer) => {
+      const index = this.unfinishedTasks.findIndex((task_it) => task_it.id === taskId);
+      if (index === -1) {
+        return observer.error(new Error('Task not found in unfinished'));
+      }
+      const task = this.unfinishedTasks[index];
+      this.unfinishedTasks.splice(index, 1);
+      localStorage.setItem('unfinishedTasks', JSON.stringify(this.unfinishedTasks));
+      task.finished = true;
+      task.finishedAt = `${Date.now()}`;
+      this.finishedTasks.push(task);
+      localStorage.setItem('finishedTasks', JSON.stringify(this.finishedTasks));
+      observer.next(task);
+      observer.complete();
+      return {
+        unsubscribe() {}
+      };
+    });
   }
 
-  removeTask(taskId: string) {
-    const index = this.finishedTasks.findIndex((task) => task.id === taskId);
-    if (index === -1) {
-      return;
-    }
-    this.finishedTasks.splice(index, 1);
-    localStorage.setItem('finishedTasks', JSON.stringify(this.finishedTasks));
+  removeTask(taskId: string): Observable<any> {
+    return new Observable<any>((observer) => {
+      const index = this.finishedTasks.findIndex((task) => task.id === taskId);
+      if (index === -1) {
+        return observer.error(new Error('Task not found in finished'));
+      }
+      this.finishedTasks.splice(index, 1);
+      localStorage.setItem('finishedTasks', JSON.stringify(this.finishedTasks));
+      observer.next();
+      observer.complete();
+      return {
+        unsubscribe() {}
+      };
+    });
   }
 }

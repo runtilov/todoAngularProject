@@ -1,4 +1,12 @@
 {
-  "unfinishedTasks": [],
+  "unfinishedTasks": [
+    {
+      "id": "1532678831965_Task1",
+      "name": "Task1",
+      "description": "Pick up the phone",
+      "finished": false,
+      "finishedAt": null
+    }
+  ],
   "finishedTasks": []
 }
