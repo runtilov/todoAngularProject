@@ -1,5 +1,5 @@
 import {TodoPageComponent} from './containers/todo-page/todo-page.component';
-import {DetailPageComponent} from './containers/detail-page/detail-page.component';
+import {TodoDetailPageComponent} from './containers/detail-page/todo-detail-page.component';
 import {RouterModule, Routes} from '@angular/router';
 import {ModuleWithProviders} from '@angular/core';
 
@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'todo/:id',
-    component: DetailPageComponent
+    component: TodoDetailPageComponent
   }
 ];
 

@@ -2,15 +2,15 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Task} from '../../models/task';
 import {ApiTasksService} from '../../services/api-storage/api-tasks.service';
-import {Subscription} from 'rxjs';
 import {LocalStorageTasksService} from '../../services/local-storage/local-storage-tasks.service';
+import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-detail-page',
-  templateUrl: './detail-page.component.html',
-  styleUrls: ['./detail-page.component.css']
+  selector: 'app-todo-detail-page',
+  templateUrl: './todo-detail-page.component.html',
+  styleUrls: ['./todo-detail-page.component.css']
 })
-export class DetailPageComponent implements OnInit, OnDestroy {
+export class TodoDetailPageComponent implements OnInit, OnDestroy {
 
   task: Task;
   subscriptions: Array<Subscription> = [];

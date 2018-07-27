@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailPageComponent } from './detail-page.component';
+import { TodoDetailPageComponent } from './todo-detail-page.component';
 
-describe('DetailPageComponent', () => {
-  let component: DetailPageComponent;
-  let fixture: ComponentFixture<DetailPageComponent>;
+describe('TodoDetailPageComponent', () => {
+  let component: TodoDetailPageComponent;
+  let fixture: ComponentFixture<TodoDetailPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DetailPageComponent ]
+      declarations: [ TodoDetailPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailPageComponent);
+    fixture = TestBed.createComponent(TodoDetailPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
